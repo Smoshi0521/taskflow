@@ -60,9 +60,9 @@ function BoardPage({ session }: Props) {
                   ))
                 }
                 <div className='h-full '>
-                  <div onClick={() => setShowCreateColumn(!showCreateColumn)} className='flex justify-center items-center gap-1 w-full px-5 py-2 cursor-pointer bg-column rounded-xl h-auto shadow-lg'>
+                  <div onClick={() => setShowCreateColumn(!showCreateColumn)} className='flex justify-center items-center gap-1 min-w-[150px] px-2 w-full py-2 cursor-pointer bg-column rounded-xl h-auto shadow-lg'>
                     <AiOutlinePlus className="text-bw" />
-                    <p className='text-bw font-semibold'>Add Column</p>
+                    <p className='text-bw font-semibold text-sm w-full'>Add Column</p>
                   </div>
                 </div>
 
@@ -72,7 +72,7 @@ function BoardPage({ session }: Props) {
           <AnimatePresence>
             {
               showCreateColumn && (
-                <div className='absolute h-screen w-full bg-black/50 top-0 left-0 z-20 flex items-center justify-center'>
+                <div className='absolute h-screen w-full bg-black/50 top-0 left-[-10px] z-20 flex items-center overflow-x-hidden'>
                   <CreateColumn setShowCreateColumn={setShowCreateColumn} />
                 </div>
               )

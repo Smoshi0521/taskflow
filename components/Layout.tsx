@@ -44,7 +44,7 @@ function Layout({ children, session }: any) {
               <div className="w-full h-20 opacity-0">
                 <Navbar closeSideBar={closeSideBar} setCloseSideBar={setCloseSideBar} setCreateBoard={setCreateBoard} />
               </div>
-              <div className="border-red-500 h-full w-full">
+              <div className=" border-red-500 h-full w-full overflow-y-auto my-2">
                 {children}
               </div>
             </div>

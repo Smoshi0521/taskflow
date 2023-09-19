@@ -58,7 +58,7 @@ function Columns({ id, title }: Props) {
               <TaskLoading />
             ) : (
               task?.docs.map((task) => (
-                <Task key={task.id} id={task.id} columnId={id} title={task.data().title} description={task.data().description} subtask={task.data().subtask} handleTaskView={handleTaskView}/>
+                <Task key={task.id} id={task.id} columnId={id} title={task.data().title} description={task.data().description} handleTaskView={handleTaskView}/>
               ))
             )
           }
@@ -81,7 +81,7 @@ function Columns({ id, title }: Props) {
           {
             showTaskView && (
               <div className='absolute h-screen w-full bg-black/20 top-0 left-0 z-20 overflow-y-auto'>
-                <TaskView id={openTaskId} columnId={columnId} setShowTaskView={setShowTaskView} />
+                <TaskView id={openTaskId} columnId={columnId} columnTitle={title} setShowTaskView={setShowTaskView} />
               </div>
             )
           }

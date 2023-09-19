@@ -45,7 +45,6 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
       const doc = await addDoc(collection(db, 'users', session?.user?.email!, 'board', `${boardId}`, 'columns', columnId, 'task'), {
         title: taskTitle,
         description: description,
-        subtask: subTask,
         createdAt: serverTimestamp(),
       }).then(async (doc) => {
         subTask.map(async (sub) => {
