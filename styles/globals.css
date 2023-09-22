@@ -25,12 +25,9 @@
   }
 }
 
-
-  .no-arrow::-ms-expand,
-  .no-arrow::-webkit-select-arrow {
-      display: none;
-    }
-
+ *{
+  -webkit-tap-highlight-color: transparent;
+ }
 
 #newtons-cradle {
   --uib-size: 50px;

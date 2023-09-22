@@ -25,26 +25,29 @@ function Layout({ children, session }: any) {
         <Login />
       ) : (
         <div className="flex flex-col h-screen bg-primary relative overflow-y-hidden z-0">
-          <header className="flex absolute top-0 w-full h-20 z-10">
-            <Logo closeSideBar={closeSideBar} />
+          <header className="flex absolute top-0 w-full min-h-[60px] z-10">
+            <Logo closeSideBar={closeSideBar} setCreateBoard={setCreateBoard} />
             <Navbar closeSideBar={closeSideBar} setCloseSideBar={setCloseSideBar} setCreateBoard={setCreateBoard} />
           </header>
           <div className='flex gap-0 max-w-screen h-full'>
             <Sidebar closeSideBar={closeSideBar} handleHideSideBar={handleHideSideBar} hideSideBar={hideSideBar} setCreateBoard={setCreateBoard} />
-            <button
-              aria-label="Open"
-              onClick={() => { setCloseSideBar(!closeSideBar), setHideSideBar(false) }}
-              disabled={!closeSideBar}
-              className={`hidden md:flex justify-start gap-2 h-12 items-center transition-opacity duration-500 bottom-[140px] ml-[10px] absolute z-0 ${closeSideBar ? 'opacity-100' : 'opacity-0'
-                }`}
-            >
-              <GoSidebarCollapse className="text-[30px] text-bw" />
-            </button>
+            {
+              closeSideBar && (
+                <button
+                  aria-label="Open"
+                  onClick={() => { setCloseSideBar(!closeSideBar), setHideSideBar(false) }}
+                  disabled={!closeSideBar}
+                  className={`hidden md:flex justify-start gap-2 h-12 items-center z-10 transition-opacity duration-500 bottom-[132px] ml-[17px] absolute`}
+                >
+                  <GoSidebarCollapse className="text-[30px] text-bw" />
+                </button>
+              )
+            }
             <div className={`flex flex-col w-full h-full transition-transform ease-in-out duration-300 overflow-x-auto`}>
-              <div className="w-full h-20 opacity-0">
+              <div className="w-full min-h-[60px] opacity-0">
                 <Navbar closeSideBar={closeSideBar} setCloseSideBar={setCloseSideBar} setCreateBoard={setCreateBoard} />
               </div>
-              <div className=" border-red-500 h-full w-full overflow-y-auto my-2">
+              <div className=" border-red-500 h-full w-full overflow-y-auto my-0 sm:my-2">
                 {children}
               </div>
             </div>

@@ -52,7 +52,12 @@ function Columns({ id, title }: Props) {
     <>
       <div onDrop={handleDrop} onDragOver={(e) => dragOver(e)} className='h-full w-[270px]'>
         <div className='flex flex-col gap-2 w-full px-2 py-2 bg-column rounded-md h-auto shadow-lg'>
-          <h3 className='text-bw cursor-default font-semibold'>{title}</h3>
+          <h3 className='text-bw cursor-default font-semibold px-3'>{title}</h3>
+          {
+           task?.size === 0 && (
+            <p className='w-full px-2 text-gray-500'>No task created</p>
+           ) 
+          }
           {
             loading ? (
               <TaskLoading />
@@ -62,6 +67,7 @@ function Columns({ id, title }: Props) {
               ))
             )
           }
+ 
           <div onClick={() => setShowCreateTask(!showCreateTask)} className='w-full gap-2 px-2 flex items-center hover:bg-task transition duration-300 py-2 rounded-lg cursor-pointer'>
             <AiOutlinePlus className="text-bw" />
             <p className='text-bw'>Add Task</p>

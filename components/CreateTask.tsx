@@ -114,9 +114,8 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
           <div className='flex flex-col gap-2'>
             {
               subTask.map((value, index) => (
-                <div className='flex items-center gap-2 w-full'>
+                <div key={index} className='flex items-center gap-2 w-full'>
                   <input
-                    key={index}
                     type='text'
                     value={value.title}
                     className='text-black w-full outline-none bg-transparent border border-gray-500 rounded-lg text-bw p-2 focus:border-dashed focus:border-green-500'

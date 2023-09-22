@@ -62,11 +62,13 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false)
   const [moveColId, setMoveColId] = useState(`${columnId}`)
   const [showLoading, setShowLoading] = useState(false)
+
   async function handleSubTaskValue(subid: string, status: boolean) {
     await updateDoc(doc(db, 'users', session?.user?.email!, 'board', `${boardId}`, 'columns', columnId, 'task', id, 'subtask', subid), {
       status: status ? false : true
     })
   }
+
   async function handleAddSubtask() {
     const uniqueId = uuidv4()
     if (newSubTask !== '') {
@@ -127,7 +129,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
 
   }, [sub])
 
-  useEffect(() => {
+  useEffect(() => { //Handle the changes progress bar base on the status of subtask
     setProgressBar(`${subCheckCount}%`)
   }, [subCheckCount]);
 
@@ -157,8 +159,10 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
       })
       .then(() => {
         setShowLoading(false)
-        setShowDeleteAlert(false)
         setShowTaskView(false)
+        setShowMoveTask(false)
+        setShowDeleteAlert(false)
+
       })
   }
 
@@ -170,6 +174,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
     })
 
     await Promise.all(deleteSub);
+
     const taskDocRef = doc(db, 'users', session?.user?.email!, 'board', `${boardId}`, 'columns', columnId, 'task', id)
     await deleteDoc(taskDocRef)
       .then(() => {
@@ -185,6 +190,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
   return (
     <div className='w-full flex justify-center h-fit relative cursor-default'>
       <AnimatePresence>
+        {/* Pop up Move Task */}
         {showMoveTask && (
           <div className='absolute h-screen flex justify-center items-center w-full bg-black/50 top-0 left-0 z-40 overflow-y-auto px-3'>
             {
@@ -192,6 +198,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 <Loader />
               ) : (
                 <motion.div
+                  key={"moveTask"}
                   initial={{ opacity: 0, y: -15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -219,7 +226,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                         {
                           column?.docs.map((column) => (
                             column.id === columnId ? null :
-                              <option value={column.id}>{column.data().title}</option>
+                              <option key={column.id} value={column.id}>{column.data().title}</option>
                           ))
                         }
                       </select>
@@ -235,7 +242,9 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
           </div>
         )
         }
+
         {
+          // Pop up delete alert
           showDeleteAlert && (
             <div className='absolute h-screen flex justify-center items-center w-full bg-black/50 top-0 left-0 z-40 overflow-y-auto px-3'>
               {
@@ -243,6 +252,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                   <Loader />
                 ) : (
                   <motion.div
+                    key={"deleteTask"}
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
@@ -260,19 +270,26 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
             </div>
           )
         }
+
       </AnimatePresence >
 
+      {/* Task View Body */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.25 }}
-        className='w-11/12 md:w-[600px] bg-secondary rounded-xl h-auto flex flex-col items-center justify-between py-5 px-6 relative my-10'>
+        className='w-11/12 md:w-[600px] bg-secondary rounded-xl h-auto flex flex-col items-center justify-between py-5 px-6 relative top-10 my-10'>
         <div className='w-full flex items-center justify-between'>
           <h2 className='font-bold text-[20px]'>{task?.data()?.title}</h2>
-          <button onClick={() => setShowListAction(!showListAction)} className='hover:bg-gray-300 hover:text-black duration-300 rounded-full p-1'>
-            <HiDotsVertical className="" />
-          </button>
+          <div className='flex items-center gap-1'>
+            <button onClick={() => setShowListAction(!showListAction)} className='text-white duration-300 rounded-full p-1'>
+              <HiDotsVertical className="" />
+            </button>
+            <button onClick={() => setShowTaskView(false)} className='hover:text-red-500 duration-300 rounded-full p-1'>
+              <AiOutlineClose />
+            </button>
+          </div>
         </div>
         <AnimatePresence>
           {
@@ -282,7 +299,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -15, opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className='absolute bg-primary flex flex-col items-start right-5 md:right-10 top-12 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 10px 20px 0px white' }} >
+                className='absolute bg-primary flex flex-col items-start right-10 sm:right-10 top-12 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 10px 20px 0px white' }} >
                 <div className='flex flex-col items-start w-full gap-2'>
                   <div className=' gap-2 flex items-center justify-between px-2 text-gray-400 hover:text-white duration-300'>
                     <AiTwotoneDelete />
@@ -347,7 +364,10 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
             }
             {
               !editTitle && (
-                <p className='font-bold w-full text-start text-bw text-xs md:text-sm text-gray-400 px-2'>Column title</p>
+                <p className='font-semibold w-full text-start text-bw text-xs md:text-sm text-gray-400 px-2'>
+                  {`in list `}
+                  <span className='underline'>{columnTitle}</span>
+                </p>
               )
             }
           </div>
@@ -434,7 +454,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
           <div className='flex flex-col gap-2'>
             {
               sub?.docs.map((subTask) => (
-                <div className='flex items-center justify-between w-full'>
+                <div key={subTask.id} className='flex items-center justify-between w-full'>
                   <label className='flex items-center gap-5 w-full'>
                     <input
                       type='checkbox'
@@ -486,9 +506,8 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
           </div>
 
         </div>
-        <div className='flex flex-col gap-2 w-full mt-5'>
-          {/* <button type='button' className='text-white w-full bg-emerald-500 hover:bg-emerald-400 transition duration-300 rounded-xl py-2 font-bold text-sm'>Create Task</button> */}
-          <button type='button' onClick={() => setShowTaskView(false)} className='text-green-600 w-full bg-slate-300 rounded-xl py-2 font-bold text-sm'>Close</button>
+        <div className='flex flex-col items-end gap-2 w-full mt-5'>
+          {/* <button type='button' onClick={() => setShowTaskView(false)} className='text-green-600 w-full sm:w-[200px] bg-slate-300 rounded-xl py-2 font-bold text-sm'>Close</button> */}
         </div>
       </motion.div>
       {
