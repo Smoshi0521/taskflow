@@ -7,6 +7,7 @@ import { db } from '@/firebase'
 import { useSession } from 'next-auth/react';
 import Loader from './Loader'
 import { Create } from '@/crud'
+import { useRouter } from 'next/router'
 type Props = {
   setCreateBoard: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -16,7 +17,7 @@ function CreateBoard({ setCreateBoard }: Props) {
   const [createWithoutTitle, setCreateWithoutTitle] = useState(false)
   const [loading, setLoading] = useState(false)
   const { data: session } = useSession()
-
+  const router = useRouter()
   async function handleCreateBoard() {
     if (boardTitle !== '') {
       setLoading(true)
@@ -28,7 +29,6 @@ function CreateBoard({ setCreateBoard }: Props) {
         setLoading(false)
         setCreateBoard(false)
       })
-      console.log(create)
       // const doc = await addDoc(collection(db, 'users', session?.user?.email!, 'board'), {
       //   userId: session?.user?.email!,
       //   title: boardTitle,

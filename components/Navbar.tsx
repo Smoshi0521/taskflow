@@ -160,9 +160,8 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
           setShowLoading(false)
           setShowDeleteAlert(false)
           setShowListAction(false)
-          router.push('/')
         })
-
+        router.push('/')
       console.log('All data deleted successfully');
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -187,7 +186,7 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
           {
             boardId !== undefined && (
               <button onClick={() => setShowListAction(!showListAction)} className='text-white duration-300 rounded-full p-1'>
-                <HiDotsVertical className="text-xl md:text-2xl" />
+                <HiDotsVertical className="text-xl md:text-2xl text-bw" />
               </button>
             )
           }
@@ -238,7 +237,7 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
                     transition={{ duration: 0.25 }}
                     className='bg-white flex flex-col items-center relative top-[-50px] rounded-lg w-[400px] h-auto z-40 p-5 gap-3'>
                     <h3 className='text-red-500 w-full font-bold text-lg'>Delete Task?</h3>
-                    <p className='text-xs text-gray-600 font-semibold'>{`Are you sure you want to delete this board? This action will remove all its column and task and cannot be recover.`}</p>
+                    <p className='text-sm text-gray-600 font-semibold'>{`Are you sure you want to delete this board? This action will remove all its column and task and cannot be recover.`}</p>
                     <div className='flex w-full justify-between mt-3 gap-2'>
                       <button onClick={handleDeleteBoard} className='bg-red-500 hover:bg-red-400 duration-300 rounded-xl text-white w-full font-semibold px-4 py-2 text-sm'>Delete</button>
                       <button onClick={() => setShowDeleteAlert(!showDeleteAlert)} className='bg-gray-500 hover:bg-gray-400 duration-300 rounded-xl text-white w-full font-semibold px-4 py-2 text-sm'>Cancel</button>

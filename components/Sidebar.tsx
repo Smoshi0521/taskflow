@@ -19,6 +19,7 @@ type Props = {
 function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard }: Props) {
   const { data: session } = useSession()
   const [dummy, setDummy] = useState(false)
+  const [themeColor, setThemeColor] = useState(false)
   const [board, loading, error] = useCollection(
     session && query(
       collection(db, 'users', session.user?.email!, 'board'),
@@ -65,7 +66,7 @@ function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard 
             <p className='font-semibod text-bw text-md cursor-default'>Hide Sidebar</p>
           </div>
         </div>
-        <ToggleTheme />
+        <ToggleTheme themeColor={themeColor} setThemeColor={setThemeColor} />
         <SignOut />
       </div>
 

@@ -20,6 +20,7 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
   const { data: session } = useSession()
   const [showBoardList, setShowBoardList] = useState(false)
   const [hideBoard, setHideBoard] = useState(false)
+  const [themeColor, setThemeColor] = useState(false)
   const [board, loading, error] = useCollection(
     session && query(
       collection(db, 'users', session.user?.email!, 'board'),
@@ -55,11 +56,11 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
         animate={closeSideBar ? { width: "350px" } : { width: "500px" }}
         transition={{ duration: 0.5 }}
         className={`w-3/6 md:w-[250px] min-h-[10px] max-w-[150px] md:min-w-[200px] md:max-w-[300px] flex items-center bg-secondary md:border-[1px] border-r-gray-500 border-transparent`}>
+
         <p className='font-bold text-[20px] md:text-[40px] text-bw text-start md:text-center w-full px-5 hidden  md:block'>TASKFLOW</p>
-        <div className='flex items-center justify-center w-full ml-2 border-red-500 z-10  '>
-          <p
-            onClick={hideBoardList}
-            className='flex items-center font-bold text-sm md:text-[40px] truncate text-ellipsis text-bw text-end md:hidden'>
+
+        <div onClick={hideBoardList} className='flex items-center w-fit max-w-[170px] ml-2 h-full border-red-500 z-10 '>
+          <p className='flex font-bold text-lg md:text-[40px] truncate text-ellipsis text-bw md:hidden text-center'>
             {
               currentBoard?.data()?.title === undefined ?
                 "TaskFlow" :
@@ -71,6 +72,7 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
             <BiChevronUp className={`text-2xl text-bw md:hidden mx-1 w-5  ${!showBoardList ? "" : "rotate-180"}`} />
           </div>
         </div>
+
       </motion.div>
 
       {
@@ -85,7 +87,7 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
               className={`${hideBoard ? "absolute" : "hidden"} flex flex-col md:hidden w-[300px] my-2 h-fit bg-secondary rounded-lg shadow-2xl py-5 px-3`}>
               <div className='flex items-center justify-between w-full'>
                 <p className='text-bw font-semibold text-sm cursor-default px-2'>{`BOARDS (${boardLength === undefined ? "0" : boardLength})`}</p>
-                <button onClick={() => setCreateBoard(true)} aria-label='Create-board' className='text-sm text-bw p-1  hover:text-white duration-300 text-emerald-500 font-semibold'>+Close</button>
+                <button onClick={() => setCreateBoard(true)} aria-label='Create-board' className='text-sm text-bw p-1  hover:text-white duration-300 text-emerald-500 font-semibold'>+Create</button>
               </div>
               <div className={`w-full ${hideBoard ? "flex" : "hidden"} flex-col flex-1 items-start py-2`}>
                 {
@@ -94,8 +96,8 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
                   ))
                 }
               </div>
-              <div className='flex flex-col gap-2'>
-                <ToggleTheme />
+              <div className='flex flex-col gap-2 mt-3'>
+                <ToggleTheme setThemeColor={setThemeColor} themeColor={themeColor} />
                 <SignOut />
               </div>
             </motion.div>
