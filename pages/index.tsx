@@ -19,12 +19,12 @@ export default function Home({ session }: any) {
 
   return (
     <Layout session={session}>
-      <div className='w-full h-full flex items-center justify-center relative top-[-50px]'>
+      <div className='w-full h-full flex items-center justify-center relative top-[-50px] px-5'>
         {
           loading ? (
             <Loader />
           ) : (
-            <p className='font-bold text-bw text-lg md:text-2xl opacity-25'>{
+            <p className='font-bold text-bw text-lg md:text-2xl opacity-25 text-center'>{
               board?.size === 0 ? "No board created." :
               "Head over to one of your board to start create and manage your task."
             }</p>
