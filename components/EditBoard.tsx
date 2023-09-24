@@ -267,8 +267,8 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
               )
             }
           </div>
-          <div className='w-full  focus-within:border-2 border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]'>
-            <input ref={titleRef} onChange={(e) => { setBoardTitle(e.target.value), setShowSaveButton(true) }} defaultValue={boardData?.title} type='text' className={`border ${boardTitle === '' && invalidBoardTitle ? "border-red-500" : "border-gray-600"} bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
+          <div className={`w-full flex items-center border ${boardTitle === '' && invalidBoardTitle ? "border-red-500" : "border-gray-600"} focus-within:border-dashed focus-within:border-2 focus-within:border-green-500 h-10 rounded-md p-2`}>
+            <input ref={titleRef} onChange={(e) => { setBoardTitle(e.target.value), setShowSaveButton(true) }} defaultValue={boardData?.title} type='text' className={`bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
           </div>
         </div>
 

@@ -21,6 +21,9 @@ const config: Config = {
         paleGreen: "var(--text-color)",
         column: "var(--columnColor)",
         task: "var(--taskColor)",
+        sideBorder: "var(--borderColor)",
+        boardTitle: "var(--boardTitle)",
+        dropText: "var(--dropTextColor)"
       },
     },
   },

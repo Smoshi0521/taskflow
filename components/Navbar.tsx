@@ -171,11 +171,11 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
   const minHeight = `clamp(2rem, 10.5vw, 5.125rem)`;
 
   return (
-    <div style={{ minHeight }} className={`w-full bg-secondary flex justify-end md:justify-between items-center shadow-sm px-2`}>
+    <div style={{ minHeight }} className={`w-full bg-secondary flex justify-end md:justify-between items-center shadow-sm px-2 sm:border md:border-b-sideBorder border-transparent`}>
       <div className='w-full h-full flex items-center justify-between relative px-2'>
 
         <div className='md:flex items-center hidden w-full '>
-          <h1 className='font-bold  md:text-[25px] text-white'>{
+          <h1 className='font-bold  md:text-[25px] text-bw'>{
             currentBoard?.data()?.title !== undefined ? currentBoard?.data()?.title
               : " "
           }</h1>
@@ -205,13 +205,13 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -15, opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className='absolute bg-primary flex flex-col items-start right-5 md:right-32 top-20 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 10px 20px 0px white' }} >
+              className='absolute bg-secondary flex flex-col items-start right-5 md:right-32 top-20 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 8px 15px 0px gray' }} >
               <div className='flex flex-col items-start w-full gap-2'>
-                <div className='gap-2 px-2 flex items-center justify-between text-gray-400 hover:text-white duration-300'>
+                <div className='gap-2 px-2 flex items-center justify-between text-dropText  hover:text-bw duration-300'>
                   <MdModeEdit />
                   <button onClick={() => setShowEditBoard(!showEditBoard)} className='w-fit text-sm md:text-md'>Edit Board</button>
                 </div>
-                <div className=' gap-2 flex justify-between px-2 text-gray-400 hover:text-red-500 duration-300'>
+                <div className=' gap-2 flex justify-between px-2 text-dropText hover:text-red-500 duration-300'>
                   <AiTwotoneDelete />
                   <button onClick={() => setShowDeleteAlert(!showDeleteBoard)} className='w-fit text-sm md:text-md'>Delete Board</button>
                 </div>

@@ -86,7 +86,7 @@ function Columns({ id, title }: Props) {
         <AnimatePresence>
           {
             showTaskView && (
-              <div className='absolute h-screen w-full bg-black/20 top-0 left-0 z-20 overflow-y-auto'>
+              <div className='absolute h-screen w-full bg-black/50 top-0 left-0 z-20 overflow-y-auto'>
                 <TaskView id={openTaskId} columnId={columnId} columnTitle={title} setShowTaskView={setShowTaskView} />
               </div>
             )

@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react'
+import React, { SetStateAction, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Loader from './Loader'
@@ -20,15 +20,27 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
   const [description, setDescription] = useState('')
   const [clickedCreate, setClickedCreate] = useState(false)
   const [subTask, setSubTask] = useState<{ title: string, time: any, id: string, status: boolean }[]>([])
+  const [subNoTitle, setSubNoTitle] = useState<any>([])
+  const [subTitleEmpty, setSubTitleEmpty] = useState(false)
   const [loading, setLoading] = useState(false)
+
   const { data: session } = useSession()
   const router = useRouter()
   const boardId = router.query.id
 
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>, index: number, id: string, status: boolean) {
+    const existingEntryIndex = subTask.findIndex((entry: any) => entry.title === '');
+    const noSubName = subTask.filter((sub: any) => sub.title === '')
+    setSubNoTitle([...noSubName])
     const newValue = e.target.value;
     const uniqueId = uuidv4()
+    if(existingEntryIndex === -1){
+      setSubTitleEmpty(true)
+    }
+    else if(existingEntryIndex !== -1){
+      setSubTitleEmpty(true)
+    }
     setSubTask((prev) => {
       const updatedSubTask = [...prev];
       updatedSubTask[index] = { title: newValue, time: new Date().toLocaleDateString(), id: id, status: status };
@@ -37,10 +49,19 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
   }
   function handleDeleteSubTask(id: string) {
     const updatedSubTask = subTask.filter((data) => data.id !== id)
+    const noSubName = subTask.filter((sub: any) => sub.title === '')
+    setSubNoTitle(noSubName)
     setSubTask(updatedSubTask)
   }
+
   async function handleCreateTask() {
-    if (taskTitle !== '') {
+    const subTaskNoTitle = subTask.filter((sub) => sub.title === '')
+    if (subTaskNoTitle.length !== 0) {
+      setSubNoTitle([...subTaskNoTitle])
+      setSubTitleEmpty(true)
+    }
+
+    if (taskTitle !== '' && subTaskNoTitle.length === 0) {
       setLoading(true)
       const doc = await addDoc(collection(db, 'users', session?.user?.email!, 'board', `${boardId}`, 'columns', columnId, 'task'), {
         title: taskTitle,
@@ -60,6 +81,11 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
     }
     setClickedCreate(true)
   }
+
+  // useEffect(() => {
+  //   const getSubTitleStatus = subTask.filter((sub: any) => sub.title === '')
+  // }, [subTask])
+
   function handleAddSubtask() {
     const uniqueId = uuidv4()
     setSubTask([...subTask, { title: '', time: '', id: uniqueId, status: false }])
@@ -110,20 +136,34 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
         </div>
 
         <div className='flex flex-col w-full'>
-          <label className='text-sm text-bw'>Subtask</label>
+          <div className='flex items-center w-full justify-between'>
+            <label className='text-sm text-bw'>Subtask</label>
+            {
+              subNoTitle.length !== 0 && subTitleEmpty && (
+                <div className='flex items-center gap-1'>
+                  <AiOutlineExclamationCircle className="text-red-500 text-sm md:text-md" />
+                  <p className='text-red-500 text-sm md:text-md'>title must not empty</p>
+                </div>
+              )
+            }
+          </div>
           <div className='flex flex-col gap-2'>
             {
-              subTask.map((value, index) => (
-                <div key={index} className='flex items-center gap-2 w-full'>
-                  <input
-                    type='text'
-                    value={value.title}
-                    className='text-black w-full outline-none bg-transparent border border-gray-500 rounded-lg text-bw p-2 focus:border-dashed focus:border-green-500'
-                    onChange={(e) => handleInputChange(e, index, value.id, false)}
-                  />
-                  <button onClick={() => handleDeleteSubTask(value.id)} type='button'><IoIosRemoveCircleOutline className="hover:text-red-500 text-lg transition duration-200" /></button>
-                </div>
-              ))
+              subTask.map((value, index) => {
+                const hasEmptyTitle = subNoTitle.some((noTitle: any) => noTitle.id === value.id && noTitle.title === '');
+                console.log(hasEmptyTitle)
+                return (
+                  <div key={index} className='flex items-center gap-2 w-full'>
+                    <input
+                      type='text'
+                      value={value.title}
+                      className={`text-black w-full outline-none bg-transparent border ${hasEmptyTitle && subTitleEmpty ? "border-red-500" : "border-gray-500"} rounded-lg text-bw p-2 focus:border-dashed focus:border-green-500`}
+                      onChange={(e) => handleInputChange(e, index, value.id, false)}
+                    />
+                    <button onClick={() => handleDeleteSubTask(value.id)} type='button'><IoIosRemoveCircleOutline className="hover:text-red-500 text-lg transition duration-200" /></button>
+                  </div>
+                )
+              })
             }
             <button onClick={handleAddSubtask} type='button' className='bg-slate-300 text-emerald-800 w-full rounded-xl text-sm flex items-center gap-1 py-2 justify-center'>
               <AiOutlinePlus className="" />

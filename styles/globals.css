@@ -9,8 +9,12 @@
     --blackWhite: black;
     --btnText: white;
     --sideColor: #fffbf7;
-    --columnColor: #10b981;
-    --taskColor:white;
+    --columnColor:  #bbf7d0;
+    --taskColor:#f0fdf4;
+    --borderColor: #e2e8f0;
+    --signOut: '';
+    --boardTitle: black;
+    --dropTextColor: #6b7280;
   }
   
   /* Dark Theme */
@@ -22,6 +26,10 @@
     --sideColor: #2f2b3a;
     --columnColor:#C3DEFE33;
     --taskColor:#9BB4CA80;
+    --borderColor: #4b5563;
+    --signOut: '';
+    --boardTitle: white;
+    --dropTextColor: #9ca3af;
   }
 }
 

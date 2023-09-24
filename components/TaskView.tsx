@@ -279,12 +279,12 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.25 }}
-        className='w-11/12 md:w-[600px] bg-secondary rounded-xl h-auto flex flex-col items-center justify-between py-5 px-6 relative top-10 my-10'>
+        className='w-11/12 md:w-[600px] bg-secondary rounded-xl h-auto flex flex-col items-center justify-between py-5 px-6 relative my-5'>
         <div className='w-full flex items-center justify-between'>
           <h2 className='font-bold text-[20px]'>{task?.data()?.title}</h2>
           <div className='flex items-center gap-1'>
             <button onClick={() => setShowListAction(!showListAction)} className='text-white duration-300 rounded-full p-1'>
-              <HiDotsVertical className="" />
+              <HiDotsVertical className="text-bw" />
             </button>
             <button onClick={() => setShowTaskView(false)} className='hover:text-red-500 duration-300 rounded-full p-1'>
               <AiOutlineClose />
@@ -299,7 +299,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -15, opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className='absolute bg-primary flex flex-col items-start right-10 sm:right-10 top-12 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 10px 20px 0px white' }} >
+                className='absolute bg-secondary flex flex-col items-start right-10 sm:right-10 top-12 rounded-lg w-[180px] h-auto z-0 px-2 py-3 gap-1' style={{ boxShadow: '0px 8px 15px 0px gray' }} >
                 <div className='flex flex-col items-start w-full gap-2'>
                   <div className=' gap-2 flex items-center justify-between px-2 text-gray-400 hover:text-white duration-300'>
                     <AiTwotoneDelete />
@@ -314,10 +314,11 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
             )
           }
         </AnimatePresence>
+
         <div className='w-full flex items-start space-x-1 mt-3'>
-          <VscPreview className="text-xl mt-2" />
           <div className='flex flex-col gap-0 w-full'>
             <div className='flex w-full gap-1 items-center'>
+              <VscPreview className="text-xl mt-1 " />
               {
                 editTitle ? (
                   <input type="text" defaultValue={task?.data()?.title} disabled={!editTitle}
@@ -364,7 +365,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
             }
             {
               !editTitle && (
-                <p className='font-semibold w-full text-start text-bw text-xs md:text-sm text-gray-400 px-2'>
+                <p className='font-semibold w-full text-start text-bw text-xs md:text-sm text-gray-400 px-6'>
                   {`in list `}
                   <span className='underline'>{columnTitle}</span>
                 </p>
@@ -375,12 +376,10 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
 
 
         <div className='w-full flex space-x-1 mt-5'>
-          <div className='h-full'>
-            <ImParagraphLeft className="text-md mt-2" />
-          </div>
           <div className='flex flex-col w-full'>
             <div className='flex items-center gap-1'>
-              <h3 className='text-sm md:text-md text-bw font-semibold p-1 w-fit'>Description</h3>
+              <ImParagraphLeft className="text-md" />
+              <h3 className='text-sm md:text-md text-bw font-bold p-1 w-fit'>Description</h3>
               {
                 !editDescription && (
                   <button className='hover:bg-white/50 rounded-full w-7 h-7 flex justify-center items-center duration-300'
@@ -391,7 +390,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 )
               }
             </div>
-            <div className={`w-full focus-within:border-2 border-dashed focus-within:border-green-500 rounded-md p-[2px]`}>
+            <div className={`w-full focus-within:border-2 border-dashed focus-within:border-green-500 rounded-md pl-6`}>
               {
                 editDescription ? (
                   <textarea
@@ -402,7 +401,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                     onChange={(e) => setNewDescription(e.target.value)}
                   />
                 ) : (
-                  <p className={`${task?.data()?.description === '' || task?.data()?.description === undefined ? "text-gray-500" : "text-bw"}`}>
+                  <p className={`${task?.data()?.description === '' || task?.data()?.description === undefined ? "text-gray-500" : "text-bw "}`}>
                     {task?.data()?.description === '' || task?.data()?.description === undefined ? "No description created." : task?.data()?.description}
                   </p>
                 )
@@ -410,7 +409,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
             </div>
             {
               editDescription && (
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='flex items-center gap-2 mt-2 pl-6'>
                   <button onClick={handleUpdateDescription} type='button' className='p-1 bg-blue-500 text-sm font-semibold px-2'>
                     {
                       savingDescription ? (
@@ -498,7 +497,7 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 </div>
               ) : (
                 <button onClick={() => setShowAddSubTask(true)} type='button' className='text-sm w-fit p-2 rounded-md bg-gray-500 hover:bg-gray-400 duration-300 mt-2'>
-                  <p>Add subtask</p>
+                  <p className='text-white'>Add subtask</p>
                 </button>
               )
             }

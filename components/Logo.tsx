@@ -55,7 +55,7 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
         initial={closeSideBar ? { width: "350px" } : { width: "500px" }}
         animate={closeSideBar ? { width: "350px" } : { width: "500px" }}
         transition={{ duration: 0.5 }}
-        className={`w-3/6 md:w-[250px] min-h-[10px] max-w-[150px] md:min-w-[200px] md:max-w-[300px] flex items-center bg-secondary md:border-[1px] border-r-gray-500 border-transparent`}>
+        className={`w-3/6 md:w-[250px] min-h-[10px] max-w-[150px] md:min-w-[200px] md:max-w-[300px] flex items-center bg-secondary border md:border-r-sideBorder border-transparent ${closeSideBar && ("sm:border-b-sideBorder  sm:border-transparent")} `}>
 
         <p className='font-bold text-[20px] md:text-[40px] text-bw text-start md:text-center w-full px-5 hidden  md:block'>TASKFLOW</p>
 

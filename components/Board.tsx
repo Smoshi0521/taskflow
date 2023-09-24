@@ -14,7 +14,7 @@ function Board({ id, title, setShowBoardList }: Props) {
     <>
       <Link href={`/board/${id}`}
         onClick={() => setShowBoardList(false)}
-        className={`${currentBoard === id && ("bg-paleGreen text-gray-800")} text-gray-400 mt-1 hover:text-white flex items-center gap-1 py-2 rounded-full px-2 border-2 hover:border-paleGreen border-transparent transition duration-200 w-10/12 cursor-pointer h-fit`}>
+        className={`${currentBoard === id && ("bg-paleGreen text-gray-800")} text-gray-400 mt-1 hover:text-boardTitle flex items-center gap-1 py-2 rounded-full px-2 border-2 hover:border-paleGreen border-transparent transition duration-200 w-10/12 cursor-pointer h-fit`}>
         <MdOutlineSpaceDashboard className="text-2xl" />
         <p className='font-semibold text-start truncate text-sm sm:text-md'>{title}</p>
       </Link>

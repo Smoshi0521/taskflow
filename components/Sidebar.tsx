@@ -33,8 +33,8 @@ function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard 
       initial={closeSideBar ? { marginLeft: "-300px", opacity: 0 } : { marginLeft: "0px", opacity: 1 }}
       animate={closeSideBar ? { marginLeft: "-300px", opacity: 0 } : { marginLeft: "0px", opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={closeSideBar ? `hidden md:flex flex-col justify-between h-screen min-w-[300px] max-w-[300px] w-full px-2 border-[1px] py-5 border-r-gray-500  border-transparent`
-        : "hidden md:flex flex-col  justify-between h-screen bg-secondary min-w-[300px] max-w-[300px] w-[100%]  px-2 border-[1px] border-r-gray-500 py-5 shadow-md border-transparent"
+      className={closeSideBar ? `hidden md:flex flex-col justify-between h-screen min-w-[300px] max-w-[300px] w-full px-2 border-[1px] py-5 border-r-sideBorder  border-transparent`
+        : "hidden md:flex flex-col  justify-between h-screen bg-secondary min-w-[300px] max-w-[300px] w-[100%]  px-2 border-[1px] border-r-sideBorder py-5 shadow-md border-transparent"
       } style={{ backgroundColor: 'var(--sideColor)' }}>
 
       <div className='h-20 opacity-0 z-0'>
@@ -43,7 +43,7 @@ function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard 
 
       <div className='flex items-center justify-between px-2'>
         <p className='cursor-default text-gray-400 text-sm'>{`BOARDS (${boardLength === undefined ? "0" : boardLength})`}</p>
-        <button onClick={() => setCreateBoard(true)} aria-label='Create-board' className='text-bw p-1  hover:text-white duration-300 text-emerald-500 font-semibold'>+Create</button>
+        <button onClick={() => setCreateBoard(true)} aria-label='Create-board' className='text-bw p-1  hover:text-bw duration-300 text-emerald-500 font-semibold'>+Create</button>
       </div>
       <div className='flex flex-col flex-1 overflow-y-auto py-2'>
         {

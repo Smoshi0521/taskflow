@@ -25,7 +25,7 @@ function Layout({ children, session }: any) {
         <Login />
       ) : (
         <div className="flex flex-col h-screen bg-primary relative overflow-y-hidden z-0">
-          <header className="flex absolute top-0 w-full min-h-[60px] z-10">
+          <header className="flex absolute top-0 w-full min-h-[60px] z-10 border border-b-sideBorder border-transparent md:border-transparent">
             <Logo closeSideBar={closeSideBar} setCreateBoard={setCreateBoard} />
             <Navbar closeSideBar={closeSideBar} setCloseSideBar={setCloseSideBar} setCreateBoard={setCreateBoard} />
           </header>
