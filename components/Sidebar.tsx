@@ -14,20 +14,21 @@ type Props = {
   closeSideBar: boolean
   handleHideSideBar: () => void
   hideSideBar: boolean
+  themeColor: boolean
   setCreateBoard: React.Dispatch<SetStateAction<boolean>>
+  setThemeColor: React.Dispatch<SetStateAction<boolean>>
 }
-function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard }: Props) {
+function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard, setThemeColor, themeColor }: Props) {
   const { data: session } = useSession()
   const [dummy, setDummy] = useState(false)
-  const [themeColor, setThemeColor] = useState(false)
   const [board, loading, error] = useCollection(
     session && query(
       collection(db, 'users', session.user?.email!, 'board'),
       orderBy("createdAt", 'desc')
     )
   )
-
   const boardLength = board?.docs.length
+  
   return (
     <motion.div
       initial={closeSideBar ? { marginLeft: "-300px", opacity: 0 } : { marginLeft: "0px", opacity: 1 }}
@@ -38,7 +39,7 @@ function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard 
       } style={{ backgroundColor: 'var(--sideColor)' }}>
 
       <div className='h-20 opacity-0 z-0'>
-        <Logo closeSideBar={closeSideBar} setCreateBoard={setCreateBoard} />
+        <Logo  closeSideBar={closeSideBar} setShowList={setDummy} showList={dummy} />
       </div>
 
       <div className='flex items-center justify-between px-2'>
@@ -47,12 +48,12 @@ function Sidebar({ closeSideBar, handleHideSideBar, hideSideBar, setCreateBoard 
       </div>
       <div className='flex flex-col flex-1 overflow-y-auto py-2'>
         {
-          /* // This will be the list of board created */
+    
           loading ? (
             <p className='text-bw cursor-default animate-pulse text-lg'>Loading...</p>
           ) : (
             board?.docs.map((board) => (
-              <Board key={board.id} id={board.id} title={board.data().title} setShowBoardList={setDummy} />
+              <Board key={board.id} id={board.id} title={board.data().title} setShowList={setDummy} />
             ))
           )
         }

@@ -1,53 +1,32 @@
 import React, { SetStateAction, useState } from 'react'
-import { AnimatePresence, clamp, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { collection, doc, orderBy, query } from 'firebase/firestore';
-import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import {doc} from 'firebase/firestore';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { useSession } from 'next-auth/react';
 import { db } from '@/firebase';
-import { AiOutlinePlus } from 'react-icons/ai'
 import { BiChevronUp } from 'react-icons/bi'
-import Board from './Board';
-import ToggleTheme from './ToggleTheme';
-import SignOut from './Signout';
 type Props = {
   closeSideBar: boolean
-  setCreateBoard: React.Dispatch<SetStateAction<boolean>>
+  showList:boolean
+  setShowList: React.Dispatch<SetStateAction<boolean>>
+
 }
-function Logo({ closeSideBar, setCreateBoard }: Props) {
+function Logo({ closeSideBar,setShowList,showList }: Props) {
   const router = useRouter()
   const boardId = router.query.id
+  const [sample, setSample] = useState(false)
   const { data: session } = useSession()
-  const [showBoardList, setShowBoardList] = useState(false)
-  const [hideBoard, setHideBoard] = useState(false)
-  const [themeColor, setThemeColor] = useState(false)
-  const [board, loading, error] = useCollection(
-    session && query(
-      collection(db, 'users', session.user?.email!, 'board'),
-      orderBy("createdAt", 'desc')
-    )
-  )
 
   const [currentBoard] = useDocument(
     session && (
       doc(db, 'users', session.user?.email!, 'board', `${boardId}`)
     )
   )
-  function hideBoardList() {
-    if (!showBoardList) {
-      setShowBoardList(true)
-      setHideBoard(true)
-    }
-    else {
-      setShowBoardList(false)
-      setTimeout(() => {
-        setHideBoard(false)
-      }, 300)
-    }
+  function showBoard() {
+    setShowList(!showList)
   }
 
-  const minHeight = `clamp(4rem, 10.5vw, 6.125rem)`
-  const boardLength = board?.docs.length;
   return (
     <AnimatePresence>
       <motion.div
@@ -57,10 +36,10 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
         transition={{ duration: 0.5 }}
         className={`w-3/6 md:w-[250px] min-h-[10px] max-w-[150px] md:min-w-[200px] md:max-w-[300px] flex items-center bg-secondary border md:border-r-sideBorder border-transparent ${closeSideBar && ("sm:border-b-sideBorder  sm:border-transparent")} `}>
 
-        <p className='font-bold text-[20px] md:text-[40px] text-bw text-start md:text-center w-full px-5 hidden  md:block'>TASKFLOW</p>
+        <p className='font-bold text-[20px] md:text-[40px] text-bw text-start md:text-center w-full px-5 hidden  md:block'>TASK<span className='text-emerald-400'>FLOW</span></p>
 
-        <div onClick={hideBoardList} className='flex items-center w-fit max-w-[170px] ml-2 h-full border-red-500 z-10 '>
-          <p className='flex font-bold text-lg md:text-[40px] truncate text-ellipsis text-bw md:hidden text-center'>
+        <div onClick={showBoard} className='flex items-center w-fit max-w-[170px] ml-2 h-full border-red-500 z-10 '>
+          <p className='flex font-bold text-md md:text-[40px] truncate text-ellipsis text-bw md:hidden text-center'>
             {
               currentBoard?.data()?.title === undefined ?
                 "TaskFlow" :
@@ -69,15 +48,15 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
           </p>
 
           <div>
-            <BiChevronUp className={`text-2xl text-bw md:hidden mx-1 w-5  ${!showBoardList ? "" : "rotate-180"}`} />
+            <BiChevronUp className={`text-2xl text-bw md:hidden mx-1 w-5 duration-200  ${!showList ? "" : "-rotate-180"}`} />
           </div>
         </div>
 
       </motion.div>
 
-      {
+      {/* {
         showBoardList && (
-          <div className='absolute md:hidden w-full flex justify-center top-16 h-screen bg-black/50 overflow-y-auto'>
+          <div className='absolute md:hidden w-full flex justify-center top-0 h-screen bg-black/50 overflow-y-auto'>
             <motion.div
               key={"boardListMenu"}
               initial={{ opacity: 0, y: -15 }}
@@ -103,9 +82,8 @@ function Logo({ closeSideBar, setCreateBoard }: Props) {
             </motion.div>
           </div>
         )
-      }
+      } */}
     </AnimatePresence>
-
   )
 }
 

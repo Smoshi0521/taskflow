@@ -1,8 +1,6 @@
 import React, { SetStateAction, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import Loader from './Loader'
-import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { IoIosRemoveCircleOutline } from 'react-icons/io'
@@ -13,15 +11,17 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 type Props = {
   setShowCreateTask: React.Dispatch<SetStateAction<boolean>>
+  setShowLoading: React.Dispatch<SetStateAction<boolean>>
   columnId: string
 }
-function CreateTask({ setShowCreateTask, columnId }: Props) {
+function CreateTask({ setShowCreateTask, setShowLoading, columnId }: Props) {
   const [taskTitle, setTaskTitle] = useState('')
   const [description, setDescription] = useState('')
   const [clickedCreate, setClickedCreate] = useState(false)
   const [subTask, setSubTask] = useState<{ title: string, time: any, id: string, status: boolean }[]>([])
   const [subNoTitle, setSubNoTitle] = useState<any>([])
   const [subTitleEmpty, setSubTitleEmpty] = useState(false)
+  const [sampleEffect, setSampleEfect] = useState('')
   const [loading, setLoading] = useState(false)
 
   const { data: session } = useSession()
@@ -30,28 +30,25 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
 
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>, index: number, id: string, status: boolean) {
-    const existingEntryIndex = subTask.findIndex((entry: any) => entry.title === '');
-    const noSubName = subTask.filter((sub: any) => sub.title === '')
-    setSubNoTitle([...noSubName])
     const newValue = e.target.value;
     const uniqueId = uuidv4()
-    if(existingEntryIndex === -1){
-      setSubTitleEmpty(true)
-    }
-    else if(existingEntryIndex !== -1){
-      setSubTitleEmpty(true)
-    }
     setSubTask((prev) => {
       const updatedSubTask = [...prev];
       updatedSubTask[index] = { title: newValue, time: new Date().toLocaleDateString(), id: id, status: status };
       return updatedSubTask;
     });
+
   }
+
   function handleDeleteSubTask(id: string) {
     const updatedSubTask = subTask.filter((data) => data.id !== id)
-    const noSubName = subTask.filter((sub: any) => sub.title === '')
+    const noSubName = updatedSubTask.filter((sub: any) => sub.title === '')
     setSubNoTitle(noSubName)
     setSubTask(updatedSubTask)
+
+    if (noSubName.length === 0) {
+      setSubTitleEmpty(false)
+    }
   }
 
   async function handleCreateTask() {
@@ -60,9 +57,8 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
       setSubNoTitle([...subTaskNoTitle])
       setSubTitleEmpty(true)
     }
-
     if (taskTitle !== '' && subTaskNoTitle.length === 0) {
-      setLoading(true)
+      setShowLoading(true)
       const doc = await addDoc(collection(db, 'users', session?.user?.email!, 'board', `${boardId}`, 'columns', columnId, 'task'), {
         title: taskTitle,
         description: description,
@@ -75,16 +71,19 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
         })
       })
         .then(() => {
-          setLoading(false)
+          setShowLoading(false)
           setShowCreateTask(false)
         })
     }
     setClickedCreate(true)
   }
 
-  // useEffect(() => {
-  //   const getSubTitleStatus = subTask.filter((sub: any) => sub.title === '')
-  // }, [subTask])
+  useEffect(() => { //If the first trigger of the Create Task function will only use this effect.
+    if (subTitleEmpty) {
+      const existingEntryIndex = subTask.filter((sub: any) => sub.title === '')
+      setSubNoTitle([...existingEntryIndex])
+    }
+  }, [subTask, subTitleEmpty])
 
   function handleAddSubtask() {
     const uniqueId = uuidv4()
@@ -113,8 +112,8 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
               )
             }
           </div>
-          <div className='w-full focus-within:border-2 border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]'>
-            <input onChange={(e) => setTaskTitle(e.target.value)} type='text' className={`border border-gray-600 bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
+          <div className={`w-full border ${clickedCreate && taskTitle === '' ? "border-red-500" : "border-gray-600"} focus-within:border-2 focus-within:border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]`}>
+            <input onChange={(e) => setTaskTitle(e.target.value)} type='text' className={`bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
           </div>
         </div>
 
@@ -130,8 +129,8 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
               )
             } */}
           </div>
-          <div className='w-full  focus-within:border-2 border-dashed focus-within:border-green-500 h-40 rounded-md p-[2px]'>
-            <textarea onChange={(e) => setDescription(e.target.value)} className='border border-gray-600 bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw resize-none p-2' />
+          <div className={`w-full  border border-gray-600 focus-within:border-2 focus-within:border-dashed focus-within:border-green-500 h-40 rounded-md p-[2px]`}>
+            <textarea onChange={(e) => setDescription(e.target.value)} className='bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw resize-none p-2' />
           </div>
         </div>
 
@@ -139,7 +138,7 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
           <div className='flex items-center w-full justify-between'>
             <label className='text-sm text-bw'>Subtask</label>
             {
-              subNoTitle.length !== 0 && subTitleEmpty && (
+              subNoTitle.length !== 0 && subTitleEmpty && subTask.length !== 0 && (
                 <div className='flex items-center gap-1'>
                   <AiOutlineExclamationCircle className="text-red-500 text-sm md:text-md" />
                   <p className='text-red-500 text-sm md:text-md'>title must not empty</p>
@@ -151,14 +150,14 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
             {
               subTask.map((value, index) => {
                 const hasEmptyTitle = subNoTitle.some((noTitle: any) => noTitle.id === value.id && noTitle.title === '');
-                console.log(hasEmptyTitle)
+
                 return (
                   <div key={index} className='flex items-center gap-2 w-full'>
                     <input
                       type='text'
                       value={value.title}
                       className={`text-black w-full outline-none bg-transparent border ${hasEmptyTitle && subTitleEmpty ? "border-red-500" : "border-gray-500"} rounded-lg text-bw p-2 focus:border-dashed focus:border-green-500`}
-                      onChange={(e) => handleInputChange(e, index, value.id, false)}
+                      onChange={(e) => { handleInputChange(e, index, value.id, false), setSampleEfect(e.target.value) }}
                     />
                     <button onClick={() => handleDeleteSubTask(value.id)} type='button'><IoIosRemoveCircleOutline className="hover:text-red-500 text-lg transition duration-200" /></button>
                   </div>
@@ -177,14 +176,14 @@ function CreateTask({ setShowCreateTask, columnId }: Props) {
           <button onClick={() => setShowCreateTask(false)} type='button' className='text-green-600 w-full bg-slate-300 rounded-xl py-2 font-bold text-sm'>Close</button>
         </div>
       </motion.form>
-      {
+      {/* {
         //Display loading while saving the created board
-        loading && (
+        !loading && (
           <div className={`w-full h-screen bg-black/50 absolute left-0 top-0 z-10 flex items-center justify-center`}>
             <Loader />
           </div>
         )
-      }
+      } */}
 
     </div>
   )

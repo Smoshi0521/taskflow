@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai'
-import Loader from './Loader';
+import Loader from '../loader/Loader';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useRouter } from 'next/dist/client/router';
@@ -53,8 +53,8 @@ function CreateColumn({ setShowCreateColumn }: Props) {
               )
             }
           </div>
-          <div className='w-full  focus-within:border-2 border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]'>
-            <input onChange={(e) => setColumnTitle(e.target.value)} type='text' className={`border border-gray-600 bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
+          <div className={`w-full border ${clickedCreate && columnTitle === '' ? "border-red-500" : "border-gray-600"} focus-within:border-2 focus-within:border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]`}>
+            <input onChange={(e) => setColumnTitle(e.target.value)} type='text' className={` bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
           </div>
         </div>
         <div className='flex flex-col gap-2 w-full'>

@@ -5,7 +5,7 @@ import { AiOutlineExclamationCircle } from 'react-icons/ai'
 import { collection, serverTimestamp, addDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { useSession } from 'next-auth/react';
-import Loader from './Loader'
+import Loader from '../loader/Loader'
 import { Create } from '@/crud'
 import { useRouter } from 'next/router'
 type Props = {
@@ -64,8 +64,8 @@ function CreateBoard({ setCreateBoard }: Props) {
               )
             }
           </div>
-          <div className='w-full  focus-within:border-2 border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]'>
-            <input onChange={(e) => setBoardTitle(e.target.value)} type='text' className={`border ${boardTitle === '' && createWithoutTitle ? "border-red-500":"border-gray-600"} bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
+          <div className={`w-full border ${boardTitle === '' && createWithoutTitle ? "border-red-500":"border-gray-600"}  focus-within:border-2 focus-within:border-dashed focus-within:border-green-500 h-10 rounded-md p-[2px]`}>
+            <input onChange={(e) => setBoardTitle(e.target.value)} type='text' className={`bg-transparent rounded-md h-full pl-2 outline-none w-full text-bw`} />
           </div>
         </div>
         <div className='flex flex-col gap-2 w-full'>

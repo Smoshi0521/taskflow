@@ -13,9 +13,8 @@ import { useRouter } from 'next/router'
 import { HiDotsVertical } from 'react-icons/hi'
 import { AiTwotoneDelete } from 'react-icons/ai'
 import { MdModeEdit } from 'react-icons/md'
-import Loader from './Loader'
-import EditBoard from './EditBoard'
-import BoardEdit from './BoardEdit'
+import Loader from './loader/Loader'
+import EditBoard from './form/EditBoard'
 type Props = {
   closeSideBar: boolean
   setCloseSideBar: React.Dispatch<SetStateAction<boolean>>
@@ -35,6 +34,7 @@ function Navbar({ closeSideBar, setCloseSideBar, setCreateBoard }: Props) {
   const { data: session } = useSession()
   const [dateInfo, setDateInfo] = useState({ date: '', dayOfWeek: '', month: '' });
 
+ 
   const getDateInfo = (): { date: string; dayOfWeek: string; month: string } => {
     const currentDate = new Date();
 

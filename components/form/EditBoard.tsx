@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { AiOutlineClose, AiOutlineExclamationCircle } from 'react-icons/ai'
 import { collection, getDocs, doc, query, getDoc, DocumentData, updateDoc, orderBy, deleteDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
-import Loader from './Loader';
+import Loader from '../loader/Loader';
 import { useRouter } from 'next/dist/client/router';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
@@ -215,10 +215,6 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
     //Check if the entry have empty title
     const emptyTitle = newColumnName.findIndex((entry: any) => entry.title === '');
 
-    if (emptyTitle === -1) {
-      setInvalidColumnTitle(false)
-    }
-
     if (existingEntryIndex !== -1) {
       // If an entry with the same id exists, update its title
       setNewColumnName((prev: any) => {
@@ -232,6 +228,13 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
     }
     setShowSaveButton(true)
   }
+
+  useEffect(() => {
+    if(invalidColumnTitle){
+      const existingEntryIndex = newColumnName.filter((entry: any) => entry.title === '');
+      setNoColumnName([...existingEntryIndex])
+    }
+  },[invalidColumnTitle,newColumnName])
 
   const removeColumn = (id: string) => {
     //Remove the column that has the same value of parameter

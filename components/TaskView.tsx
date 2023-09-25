@@ -1,7 +1,7 @@
 import React, { SetStateAction, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
-import Loader from './Loader'
+import Loader from './loader/Loader'
 import 'firebase/firestore';
 import { addDoc, collection, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ import { MdModeEdit } from 'react-icons/md'
 import { HiDotsVertical } from 'react-icons/hi'
 import { AiOutlineArrowRight, AiOutlineClose } from 'react-icons/ai'
 import { AiTwotoneDelete } from 'react-icons/ai'
-import Loader2 from './Loader2';
+import Loader2 from './loader/Loader2';
 type Props = {
   id: string
   columnId: string
@@ -390,14 +390,14 @@ function TaskView({ id, columnId, columnTitle, setShowTaskView }: Props) {
                 )
               }
             </div>
-            <div className={`w-full focus-within:border-2 border-dashed focus-within:border-green-500 rounded-md pl-6`}>
+            <div className={`w-full  rounded-md pl-6`}>
               {
                 editDescription ? (
                   <textarea
                     disabled={!editDescription}
                     spellCheck={false}
                     defaultValue={task?.data()?.description} // Replace 'yourValue' with the value you want to display
-                    className={`min-h-[50px] h-[200px] border border-gray-600 bg-transparent rounded-md pl-2 outline-none w-full text-bw resize-none p-2`}
+                    className={`min-h-[50px] h-[200px] border border-gray-600 focus-within:border-2 focus-within:border-dashed focus-within:border-green-500 bg-transparent rounded-md pl-2 outline-none w-full text-bw resize-none p-2`}
                     onChange={(e) => setNewDescription(e.target.value)}
                   />
                 ) : (

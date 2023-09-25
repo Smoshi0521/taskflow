@@ -1,19 +1,22 @@
 import Layout from '@/components/Layout'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router'
 import Columns from '@/components/Columns';
 import { AiOutlinePlus } from 'react-icons/ai'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import CreateColumn from '@/components/CreateColumn';
+import CreateColumn from '@/components/form/CreateColumn';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { db } from '@/firebase';
-import Loader from '@/components/Loader';
+import Loader from '@/components/loader/Loader';
 import { FiArrowDownCircle } from 'react-icons/fi'
+import { motion } from 'framer-motion';
+import SignOut from '@/components/Signout';
+import Board from '@/components/Board';
+import ToggleTheme from '@/components/ToggleTheme';
+
 type Props = {
   session: any
 }
@@ -22,12 +25,26 @@ function BoardPage({ session }: Props) {
   const [showCreateColumn, setShowCreateColumn] = useState(false)
   const router = useRouter()
   const boardId = router.query.id
+
+  const [board, loading2, error2] = useCollection(
+    session && query(
+      collection(db, 'users', session.user?.email!, 'board'),
+      orderBy("createdAt", 'desc')
+    )
+  )
   const [columns, loading, error] = useCollection(
     session && query(
       collection(db, 'users', session.user?.email!, 'board', `${boardId}`, 'columns'),
       orderBy("createdAt", 'asc')
     )
   )
+
+  useEffect(() => {
+    if (board?.size === 0) {
+      router.push('/')
+      console.log("here")
+    }
+  }, [board, router])
 
   return (
     <Layout session={session}>
@@ -36,7 +53,7 @@ function BoardPage({ session }: Props) {
           <Loader />
         </div>
       ) : (
-        <div className='flex space-x-2 text-bw h-full px-2 pt-3'>
+        <div className='flex text-bw h-full px-2 pt-3'>
           {
             columns?.size === 0 ? (
               <div className='flex justify-center w-full'>
@@ -53,16 +70,16 @@ function BoardPage({ session }: Props) {
 
               </div>
             ) : (
-              <div className='flex items-center gap-2 w-auto '>
+              <div className='flex items-center gap-2 w-auto'>
                 {
                   columns?.docs.map((column) => (
                     <Columns key={column.id} id={column.id} title={column.data().title} />
                   ))
                 }
                 <div className='h-full '>
-                  <div onClick={() => setShowCreateColumn(!showCreateColumn)} className='flex justify-center items-center gap-1 min-w-[150px] px-2 w-full py-2 cursor-pointer bg-column rounded-xl h-auto shadow-lg'>
-                    <AiOutlinePlus className="text-bw" />
-                    <p className='text-bw font-semibold text-sm w-full'>Add Column</p>
+                  <div onClick={() => setShowCreateColumn(!showCreateColumn)} className='flex hover:bg-emerald-500 hover:text-white justify-center items-center gap-1 min-w-[150px] px-2 w-full py-2 cursor-pointer bg-column rounded-xl h-auto shadow-lg'>
+                    <AiOutlinePlus className="" />
+                    <p className='font-semibold text-sm w-full'>Add Column</p>
                   </div>
                 </div>
 
@@ -72,7 +89,7 @@ function BoardPage({ session }: Props) {
           <AnimatePresence>
             {
               showCreateColumn && (
-                <div className='absolute h-screen w-full bg-black/50 top-0 left-[-10px] z-20 flex items-center overflow-x-hidden'>
+                <div className='absolute h-screen w-full bg-black/50 top-0 left-[0px] z-20 flex items-center overflow-x-hidden'>
                   <CreateColumn setShowCreateColumn={setShowCreateColumn} />
                 </div>
               )

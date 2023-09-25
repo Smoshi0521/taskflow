@@ -1,15 +1,18 @@
 import Layout from '@/components/Layout';
 import Sidebar from '@/components/Sidebar';
 import { getSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GoSidebarCollapse } from 'react-icons/go';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { db } from '@/firebase';
-import Loader from '@/components/Loader';
+import Loader from '@/components/loader/Loader';
 export default function Home({ session }: any) {
   const [closeSideBar, setCloseSideBar] = useState(false);
+  const [showList, setShowList] = useState(false)
+  const [hideBoard, setHideBoard] = useState(false)
+  const [themeColor, setThemeColor] = useState(false)
   const [board, loading, error] = useCollection(
     session && query(
       collection(db, 'users', session.user?.email!, 'board'),
@@ -24,10 +27,24 @@ export default function Home({ session }: any) {
           loading ? (
             <Loader />
           ) : (
-            <p className='font-bold text-bw text-lg md:text-2xl opacity-25 text-center'>{
-              board?.size === 0 ? "No board created." :
-              "Head over to one of your board to start create and manage your task."
-            }</p>
+            <div>
+              {
+                board?.size !== 0 && (
+                  <p className='font-bold text-bw text-lg md:text-2xl opacity-25 text-center'>{
+                    `Head over to one of your board to start create and manage your task.`
+                  }</p>
+                )
+              }
+              {
+                board?.size === 0 && (
+                  <div className='flex flex-col'>
+                    <p className='font-bold text-bw text-lg md:text-2xl opacity-25 text-center'>{
+                      `No board created`
+                    }</p>
+                  </div>
+                )
+              }
+            </div>
           )
         }
       </div>
