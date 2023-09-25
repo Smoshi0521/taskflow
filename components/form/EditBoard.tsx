@@ -206,6 +206,16 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
           setShowListAction(false)
         })
     }
+    else if (boardTitleNotEmpty) {
+      await updateDoc(doc(db, 'users', session?.user?.email!, 'board', `${boardId}`), {
+        title: boardTitle === '' ? titleRef.current.value : boardTitle,
+      })
+        .then(() => {
+          setLoading(false)
+          setShowEditBoard(false)
+          setShowListAction(false)
+        })
+    }
   }
 
 
@@ -230,11 +240,11 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
   }
 
   useEffect(() => {
-    if(invalidColumnTitle){
+    if (invalidColumnTitle) {
       const existingEntryIndex = newColumnName.filter((entry: any) => entry.title === '');
       setNoColumnName([...existingEntryIndex])
     }
-  },[invalidColumnTitle,newColumnName])
+  }, [invalidColumnTitle, newColumnName])
 
   const removeColumn = (id: string) => {
     //Remove the column that has the same value of parameter
