@@ -207,6 +207,7 @@ function EditBoard({ setShowEditBoard, setShowListAction }: Props) {
         })
     }
     else if (boardTitleNotEmpty) {
+      setLoading(true)
       await updateDoc(doc(db, 'users', session?.user?.email!, 'board', `${boardId}`), {
         title: boardTitle === '' ? titleRef.current.value : boardTitle,
       })
